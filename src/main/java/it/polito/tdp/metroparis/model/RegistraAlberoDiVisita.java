@@ -40,11 +40,11 @@ public class RegistraAlberoDiVisita implements TraversalListener<Fermata, Defaul
 		Fermata source = this.grafo.getEdgeSource(e.getEdge());
 		Fermata target = this.grafo.getEdgeTarget(e.getEdge());
 		
-		if(!alberoInverso.containsKey(target)) {
+		if(!alberoInverso.containsKey(target)) { //se non contiene target, il target è quello che ho appena scoperto partendo da source
 			alberoInverso.put(target, source) ;
 //			System.out.println(target + " si raggiunge da "+ source) ;
 		}
-		else if(!alberoInverso.containsKey(source)) {
+		else if(!alberoInverso.containsKey(source)) {//Se non contiene source, il source è quello che ho appena scoperto partendo dal target
 			alberoInverso.put(source, target) ;
 //			System.out.println(source + " si raggiunge da "+ target) ;
 

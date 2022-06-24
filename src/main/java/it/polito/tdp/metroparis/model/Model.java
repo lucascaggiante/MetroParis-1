@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.traverse.BreadthFirstIterator;
 //import org.jgrapht.traverse.DepthFirstIterator;
@@ -21,7 +24,10 @@ public class Model {
 	Map<Integer, Fermata> fermateIdMap ;
 	
 	private Graph<Fermata, DefaultEdge> grafo;
-
+	/* METODO DIJKSTRA PER CAMMINI MINIMI
+	private DijkstraShortestPath<Fermata,DefaultEdge> grafo2;
+	private GraphPath<Fermata,DefaultEdge> grafo3;
+*/
 	public List<Fermata> getFermate() {
 		if (this.fermate == null) {
 			MetroDAO dao = new MetroDAO();
@@ -38,6 +44,7 @@ public class Model {
 
 	public void creaGrafo() {
 		this.grafo = new SimpleDirectedGraph<Fermata, DefaultEdge>(DefaultEdge.class);
+		
 
 //		Graphs.addAllVertices(this.grafo, this.fermate);
 		Graphs.addAllVertices(this.grafo, getFermate());
@@ -48,7 +55,9 @@ public class Model {
 		for (CoppiaId coppia : fermateDaCollegare) {
 			this.grafo.addEdge(fermateIdMap.get(coppia.getIdPartenza()), fermateIdMap.get(coppia.getIdArrivo()));
 		}
-
+		/* METODO DIJKSTRA
+		this.grafo2 = new DijkstraShortestPath<>(this.grafo);
+		*/
 //		System.out.println(this.grafo);
 //		System.out.println("Vertici = " + this.grafo.vertexSet().size());
 //		System.out.println("Archi   = " + this.grafo.edgeSet().size());
@@ -56,13 +65,18 @@ public class Model {
 
 	public List<Fermata> calcolaPercorso(Fermata partenza, Fermata arrivo) {
 		creaGrafo() ;
+		/* METODO DIJKSTRA
+		this.grafo3 = this.grafo2.getPath(partenza, arrivo);
+		List<Fermata> lista = this.grafo3.getVertexList();
+		System.out.println(lista);
+		System.out.println(lista.size()); */
 		Map<Fermata,Fermata> alberoInverso = visitaGrafo(partenza);
 		
 		Fermata corrente = arrivo ;
-		List<Fermata> percorso = new ArrayList<>() ;
+		List<Fermata> percorso = new ArrayList<>() ;	//LinkedList per molti elementi in lista
 		
 		while(corrente != null) {
-			percorso.add(0, corrente);
+			percorso.add(0, corrente);	//aggiunge nell'ordine corretto
 			corrente = alberoInverso.get(corrente) ;
 		}
 		
